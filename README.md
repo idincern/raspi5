@@ -2,31 +2,32 @@
 
 This guide provides steps to set up automatic Bluetooth pairing on a Raspberry Pi 5 without using pin codes for authentication. After these settings, your RPI becomes a bluetooth device like headset/speaker, where you can connect automatically without using any UI.
 
-## Requirements
-1) Install **bluez** and **bluez-tools** packages from apt first.
+# Requirements
+## 1) Install **bluez** and **bluez-tools** packages from apt first.
 ```sh
 sudo apt-get install bluez && sudo apt-get install bluez-tools
 ```
-2) Change Bluetooth configurations.
-- Open *dbus.org.bluez.service* file.
-```sh
-sudo nano /etc/systemd/system/dbus.org.bluez.service
-```
-- Edit *ExecStart* line and add *ExecStartPost* lines in the file.
-```sh
-ExecStart=/usr/libexec/bluetooth/bluetoothd -C
-ExecStartPost = /usr/bin/sdptool add SP
-```
-
-#
-
-
 **NOTE**: After installation, you can test no-pin connection manually via this command:
 ```sh
 sudo bt-agent -c NoInputNoOutput
 ```
 
-## Steps
+## 2) Change Bluetooth configurations.
+- Open *dbus.org.bluez.service* file.
+```sh
+sudo nano /etc/systemd/system/dbus.org.bluez.service
+```
+- Edit *ExecStart* line and add *ExecStartPost* line to the file.
+```sh
+...
+ExecStart=/usr/libexec/bluetooth/bluetoothd -C
+ExecStartPost = /usr/bin/sdptool add SP
+...
+```
+
+#
+
+# Steps to Auto Start Bluetooth Connection
 ### Step 1. Create AutoStart Folder
 Create an AutoStart folder in the Home directory.
 ```sh
@@ -75,6 +76,4 @@ Exit 0
 
 **NOTE:** You can also add all commands above directly to the rc.local file, but this is more loosely-coupled way. Also, this may wark on also RPI 4.
 
-
-
-
+**NOTE:** Added *bt_writer.py* and *bt_reader.py* files for online testing via *Serial Bluetooth Terminal* application in Android phones.

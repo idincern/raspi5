@@ -3,10 +3,23 @@
 This guide provides steps to set up automatic Bluetooth pairing on a Raspberry Pi 5 without using pin codes for authentication. After these settings, your RPI becomes a bluetooth device like headset/speaker, where you can connect automatically without using any UI.
 
 ## Requirements
-Install **bluez** and **bluez-tools** packages from apt first.
+1) Install **bluez** and **bluez-tools** packages from apt first.
 ```sh
 sudo apt-get install bluez && sudo apt-get install bluez-tools
 ```
+2) Change Bluetooth configurations.
+- Open *dbus.org.bluez.service* file.
+```sh
+sudo nano /etc/systemd/system/dbus.org.bluez.service
+```
+- Edit *ExecStart* line and add *ExecStartPost* lines in the file.
+```sh
+ExecStart=/usr/libexec/bluetooth/bluetoothd -C
+ExecStartPost = /usr/bin/sdptool add SP
+```
+
+#
+
 
 **NOTE**: After installation, you can test no-pin connection manually via this command:
 ```sh
@@ -40,7 +53,7 @@ default-agent
 scan on
 EOF
 
-sudo bt-agent -c NoInputNoOutput
+sudo bt-agent -c NoInputNoOutput & sudo rfcomm watch hci0
 ```
 
 ### Step 4. Auto-Run Script on Boot
